@@ -94,13 +94,15 @@ Crie um arquivo chamado **`.env.local`** na raiz da pasta **`frontend-systems`**
 NEXT_PUBLIC_API_URL=http://localhost:3333
 ```
 
-Para criar o arquivo das variáveis ambiente para o mobile, você precisa primeiro saber o código ip da sua máquina, no seu terminal rode comando ```ipconfig``` e pegue o **Endereço IPv4**, crie um arquivo chamado **`.env`** na raiz da pasta **`mobile-systems`** e cole o seguinte conteúdo:
+Para criar o arquivo das variáveis ambiente para o mobile, você precisa primeiro saber o código ip da sua máquina. <br>
+
+No seu terminal rode comando ```ipconfig``` e pegue o **Endereço IPv4**, crie um arquivo chamado **`.env`** na raiz da pasta **`mobile-systems`** e cole o seguinte conteúdo:
 
 ```dotenv
 # mobile-systems/.env
 
 # URL da API do NestJS
-EXPO_PUBLIC_MY_LOCAL_IP= *Cole aqui o seu endereço de IP sem aspas*
+EXPO_PUBLIC_MY_LOCAL_IP= <- Cole aqui o seu endereço de IP sem aspas
 ```
 
 ### 4\. Instalação e Configuração Inicial
@@ -133,13 +135,13 @@ pnpm run start:dev
 # A API estará disponível em http://localhost:3333
 ```
 
-Caso acuse algum erro no module `Prisma.Cliente`, ainda dentro da basta **`backend-sysmtes`** rode o seguinte comando:
+Caso acuse algum erro no module `Prisma.Client`, ainda dentro da basta **`backend-systems`** rode o seguinte comando:
 
 ```bash
 pnpm prisma generate
 ```
 
-Após esse comanda, será gerado o client do prisma, podendo assim fazer as chapas no banco de dados, e corrindo o erro.
+Após esse comanda, será gerado o client do prisma, podendo assim fazer as chamadas no banco de dados, e corrigindo o erro.
 
 #### B. Frontend (Next.js - Web)
 
