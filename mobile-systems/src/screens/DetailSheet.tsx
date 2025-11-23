@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { RootStackParamList } from "../../App";
 import { api, Sheet, SheetHistory } from "../api/api";
+import { formatUUIDAsShort } from "../utils/formatUUID";
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'Detail'>;
 type DetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Detail'>;
@@ -18,12 +19,6 @@ export function DetailSheet() {
   const [sheet, setSheet] = useState<Sheet | null>(null);
   const [loading, setLoading] = useState(true);
   const [updates, setUpdates] = useState<{ [key: string]: any }>({}); // Objeto vazio para começar
-
-  // Estados para edição (usaremos apenas material e localização para simplificar)
-  // const [material, setMaterial] = useState('');
-  // const [location, setLocation] = useState('');
-  // const [width, setWidth] = useState('');
-  // const [length, setLength] = useState('');
 
   // 1. Função de busca por ID
   const fetchSheet = async () => {
@@ -69,7 +64,7 @@ export function DetailSheet() {
 
   // Rastreia a alteração no objeto 'updates'
   setUpdates(prev => ({ ...prev, [field]: finalValue }));
-};
+  };
 
   // 2. Função de Atualização (PATCH)
   const handleUpdate = async () => {
@@ -114,6 +109,22 @@ export function DetailSheet() {
     );
   };
 
+  const translate = (field: string) => {
+    if(field === 'width') {
+      return 'Largura'
+    }
+
+    if(field === 'length') {
+      return 'Comprimento'
+    }
+
+    if(field === 'location') {
+      return 'Localização'
+    }
+
+    return 'Material'
+  }
+
   const HistoryItem = ({ item }: { item: SheetHistory }) => {
   return (
     <View style={historyStyles.item}>
@@ -121,7 +132,8 @@ export function DetailSheet() {
         {new Date(item.updateDate).toLocaleDateString()} às {new Date(item.updateDate).toLocaleTimeString()}
       </Text>
       <Text>
-        O campo <Text style={historyStyles.field}>{item.alteredField}</Text> foi alterado
+        O campo <Text style={historyStyles.field}>{translate(item.alteredField)}</Text> foi alterado
+        de <Text style={historyStyles.value}>{item.oldValue || 'Vazio'} </Text>
         para <Text style={historyStyles.value}>{item.newValue || 'Vazio'}</Text>
       </Text>
       <Text style={historyStyles.user}>Por: {item.user || 'Sistema'}</Text>
@@ -145,7 +157,7 @@ export function DetailSheet() {
     >
       <ScrollView style={styles.container}>
         <Text style={styles.title}>ID: {sheet.id}</Text>
-        <Text style={styles.codigo}>Código QR: {sheet.code}</Text>
+        <Text style={styles.codigo}>Código QR Abrev.: {formatUUIDAsShort(sheet.code)}</Text>
 
         {/* Detalhes Atuais */}
         <View style={styles.card}>

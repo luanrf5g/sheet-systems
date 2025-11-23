@@ -129,6 +129,22 @@ export default function Detail() {
     return value === null || undefined ? 'N/A' : value.toString().replace('.', ',');
   };
 
+  const translate = (field: string ) => {
+    if(field === 'width') {
+      return 'Largura'
+    }
+
+    if(field === 'length') {
+      return 'Comprimento'
+    }
+
+    if(field === 'location') {
+      return 'Localização'
+    }
+
+    return 'Material'
+  }
+
   return (
     <div className="container mx-auto p-8">
       <Link
@@ -242,7 +258,7 @@ export default function Detail() {
                 <div key={item.id} className="border-l-4 border-green-500 bg-gray-50 p-3 mb-3 rounded">
                   <p className="text-xs text-gray-500">{new Date(item.updateDate).toLocaleString('pt-BR')}</p>
                   <p className="text-sm text-gray-800">
-                    O campo <i>{item.alteredField}</i> foi alterado de <b>{item.oldValue}</b> para <b>{item.newValue}</b>
+                    O campo <b><i>{translate(item.alteredField)}</i></b> foi alterado de <b>{item.oldValue}</b> para <b>{item.newValue}</b>
                   </p>
                 </div>
               ))

@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const MY_LOCAL_IP = '192.168.1.106';
+const MY_LOCAL_IP = '192.168.1.105';
 
 export const api = axios.create({
-  baseURL: `http://${MY_LOCAL_IP}:3000`
+  baseURL: `http://${MY_LOCAL_IP}:3333`
 })
 
 export interface Sheet {

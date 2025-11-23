@@ -33,7 +33,6 @@ export function CreateSheet() { // Use 'export function' para exportação nomea
           .join(separator);
       }
 
-      console.log(cleanStringInput(material));
       // 1. Validação básica de números (para evitar NaN no backend)
       const data = {
         material: cleanStringInput(material),
