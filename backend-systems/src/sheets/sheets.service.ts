@@ -3,6 +3,7 @@ import { CreateSheetDto } from './dto/create-sheet.dto';
 import { UpdateSheetDto } from './dto/update-sheet.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { randomUUID } from 'node:crypto';
+import { SheetsGateway } from './sheets.gateway';
 
 interface UpdateData {
   material?: string;
@@ -13,27 +14,36 @@ interface UpdateData {
 
 @Injectable()
 export class SheetsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private sheetsGateway: SheetsGateway
+  ) { }
 
   async create(createSheetDto: CreateSheetDto) {
     const codeGenerated = `CH-${randomUUID()}`;
 
-    console.log(createSheetDto);
-
-    return this.prisma.sheet.create({
+    const newSheet = await this.prisma.sheet.create({
       data: {
         ...createSheetDto,
         code: codeGenerated
       }
     })
+
+    this.sheetsGateway.notifyAddedPlate(newSheet)
+
+    return newSheet;
   }
 
   async findAll() {
-    return this.prisma.sheet.findMany();
+    return await this.prisma.sheet.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
   }
 
   async findOne(id: number) {
-    const sheet = this.prisma.sheet.findUnique({
+    const sheet = await this.prisma.sheet.findUnique({
       where: { id },
       include: {
         sheetHistories: {
@@ -102,11 +112,13 @@ export class SheetsService {
       return updatedSheet;
     })
 
+    this.sheetsGateway.notifyUpdatedPlate(result)
+
     return result;
   }
 
-  remove(id: number) {
-    return this.prisma.sheet.delete({
+  async remove(id: number) {
+    return await this.prisma.sheet.delete({
       where: { id }
     })
   }

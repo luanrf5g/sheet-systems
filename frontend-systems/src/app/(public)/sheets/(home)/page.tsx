@@ -1,7 +1,11 @@
-// frontend-chapas/src/app/chapas/page.tsx
-import { api, Sheet } from "@/src/lib/api";
+'use client'
 
-// Esta função será executada no SERVIDOR (Next.js)
+import { api, Sheet } from "@/src/lib/api";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+
+const SOCKET_URL = 'http://localhost:3333'
+
 async function getSheets() {
   try {
     const response = await api.get<Sheet[]>('/sheets');
@@ -12,8 +16,44 @@ async function getSheets() {
   }
 }
 
-export default async function Home() {
-  const sheets: Sheet[] = await getSheets();
+export default function Home() {
+  const [sheets, setSheets] = useState<Sheet[]>([]);
+
+  useEffect(() => {
+    async function fetchSheets() {
+      const response = await getSheets();
+      setSheets(response);
+    }
+    fetchSheets();
+  }, [])
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Conectado ao Servidor WebSocket!');
+    })
+
+    socket.on('AddedPlate', (newSheet: Sheet) => {
+      console.log('Chapa adicionada via WebSocket: ', newSheet.code);
+
+      setSheets(prevSheets => [newSheet, ...prevSheets])
+    })
+
+    socket.on('UpdatedPlate', (updatedSheet: Sheet) => {
+      console.log('Chapa atualizada via WebSocket: ', updatedSheet.code)
+
+      setSheets(prevSheets =>
+        prevSheets.map(
+          sheet => sheet.id === updatedSheet.id ? updatedSheet : sheet
+        )
+      )
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
 
   return (
     <div className="container mx-auto p-4">

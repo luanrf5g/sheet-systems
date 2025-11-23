@@ -4,8 +4,11 @@ import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity
 import { RootStackParamList } from "../../App";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { api, Sheet } from "../api/api";
+import { io } from "socket.io-client";
 
 type ListScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'List'>;
+
+const SOCKET_URL = "http://192.168.1.105:3333";
 
 export function ListSheets() {
   const navigation = useNavigation<ListScreenNavigationProp>();
@@ -27,6 +30,32 @@ export function ListSheets() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Conectado ao Servidor WebSocket!');
+    })
+
+    socket.on('AddedPlate', (newSheet: Sheet) => {
+      console.log('Nova chapa recebida via WebSocket: ', newSheet.code);
+
+      setSheets(prevSheets => [newSheet, ...prevSheets])
+    })
+
+    socket.on('UpdatedPlate', (updatedSheet: Sheet) => {
+      console.log('Chapa atualizada via WebSocket: ', updatedSheet.code);
+
+      setSheets(prevSheets =>
+        prevSheets.map(sheet => sheet.id === updatedSheet.id ? updatedSheet : sheet)
+      )
+    })
+
+    return () => {
+      socket.disconnect();
+    }
+  }, [])
 
   // Recarrega a lista toda vez que a tela for focada (útil após criar/editar)
   useEffect(() => {
