@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Sheet {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique // Para o QR Code
+  material  String
+  thickness Float
+  width     Float
+  length    Float
+  weight    Float?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sheetHistories SheetHistory[]
+
+  @@map("sheets")
+}
+
+model SheetHistory {
+  id           Int      @id @default(autoincrement())
+  sheetId      Int
+  alteredField String // Campo Alterado, seja qual for (material, thickness, width, length, weight, location)
+  oldValue     String? // Valor Antigo
+  newValue     String? // Novo Valor
+  user         String? // Usuário que fez a alteração (ainda não implementado)
+  updateDate   DateTime @default(now()) // Data da Alteração
+
+  sheet Sheet @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+}
