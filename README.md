@@ -1,11 +1,3 @@
-É uma excelente ideia formalizar seu projeto com um `README.md` completo\! Ele servirá como a documentação oficial, guia de instalação e portfólio.
-
-Com base nas nossas interações, no escopo do projeto (CRUD de chapas/sheets com histórico) e nas tecnologias que você mencionou (NestJS, Next.js, React Native, Prisma, PostgreSQL, Docker, pnpm), preparei um `README.md` detalhado e profissional.
-
-Não consigo acessar seu perfil do GitHub para verificar as badges exatas, mas incluirei as badges relevantes para as tecnologias usadas no seu projeto, seguindo um padrão comum.
-
------
-
 # 🏭 Metalizze: Gestão de Estoque de Chapas Metálicas
 
 **Metalizze** é uma aplicação completa (Full Stack) desenvolvida para digitalizar e otimizar o controle de inventário de chapas metálicas, fornecendo uma visão unificada e em tempo real do estoque e de todas as alterações realizadas.
