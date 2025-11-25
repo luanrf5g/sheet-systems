@@ -1,10 +1,10 @@
 'use client'
 
 import { api, Sheet } from "@/src/lib/api";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = 'http://localhost:3333'
+const SOCKET_URL = 'http://192.168.3.54:3333'
 
 async function getSheets() {
   try {
@@ -16,8 +16,19 @@ async function getSheets() {
   }
 }
 
+async function searchSheets(value: string) {
+  try {
+    const response = await api.get<Sheet[]>(`/sheets/search/${value}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar chapas no backend:', error);
+    return [];
+  }
+}
+
 export default function Home() {
   const [sheets, setSheets] = useState<Sheet[]>([]);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     async function fetchSheets() {
@@ -26,6 +37,19 @@ export default function Home() {
     }
     fetchSheets();
   }, [])
+
+  useEffect((): void => {
+    async function reFetchSheets() {
+      if(search.trim() === '') {
+        const response = await getSheets();
+        setSheets(response);
+        return;
+      }
+      const response = await searchSheets(search);
+      setSheets(response);
+    }
+    reFetchSheets();
+  }, [search])
 
   useEffect(() => {
     const socket = io(SOCKET_URL);
@@ -57,11 +81,20 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Estoque de Chapas (Web)</h1>
+      <h1 className="text-3xl font-bold mb-6">CADE MINHAS PEÇAS EVERTON!!!!</h1>
       <p className="text-gray-600 mb-4">Conectado ao backend em: {process.env.NEXT_PUBLIC_API_URL}</p>
 
       <div className="flex justify-between mb-4">
         <p className="text-xl">Total de Chapas: {sheets.length}</p>
+        <input
+          type="text"
+          id="search"
+          name="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Pesquisador..."
+          className="bg-white shadow border rounded py-2 px-3 mr-4 text-black leading-tight focus:outline-none focus:shadow-outline"
+        />
         <a
             href="/sheets/create"
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
