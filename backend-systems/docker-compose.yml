@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    image: postgres
+    image: postgres:13
     container_name: db_sheets
     ports:
       - 5432:5432

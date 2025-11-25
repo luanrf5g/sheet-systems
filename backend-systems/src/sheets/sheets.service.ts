@@ -42,6 +42,20 @@ export class SheetsService {
     });
   }
 
+  async findMany(material: string) {
+    return await this.prisma.sheet.findMany({
+      where: {
+        material: {
+          contains: material,
+          mode: 'insensitive'
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+  }
+
   async findOne(id: number) {
     const sheet = await this.prisma.sheet.findUnique({
       where: { id },

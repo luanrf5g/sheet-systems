@@ -22,6 +22,11 @@ export class SheetsController {
     return this.sheetsService.findOne(+id);
   }
 
+  @Get('search/:material')
+  findMany(@Param('material') material: string) {
+    return this.sheetsService.findMany(material);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSheetDto: UpdateSheetDto) {
     return this.sheetsService.update(+id, updateSheetDto);
