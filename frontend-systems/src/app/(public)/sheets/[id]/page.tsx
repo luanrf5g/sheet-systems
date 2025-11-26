@@ -113,7 +113,7 @@ export default function Detail() {
     try {
       await api.delete(`/sheets/${sheetId}`);
       alert('Chapa excluída com sucesso.');
-      router.push('/');
+      router.push('/dashboard');
     } catch (e) {
       alert('Erro ao excluir chapa.');
     }

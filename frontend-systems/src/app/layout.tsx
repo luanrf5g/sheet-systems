@@ -16,6 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+      </head>
       <body
         style={{ backgroundColor: '#111', color: '#fff', fontFamily: poppinsRegular.style.fontFamily }}
       >

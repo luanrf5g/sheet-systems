@@ -93,10 +93,12 @@ export default function Dashboard() {
 
   return (
     <main
+      className="full-screen-page overflow-hidden"
       style={{
         backgroundColor: '#f0f0f0',
         color: '#242424',
-        padding: 32
+        padding: 32,
+        height: '100vh',
       }}
     >
       <div
@@ -132,8 +134,14 @@ export default function Dashboard() {
         style={{
           backgroundColor: '#fff',
           borderRadius: 16,
+          width: '100%',
+          height: 'calc(100% - 128px)',
           boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.25)',
           padding: '16px 24px',
+          display: 'block',
+          position: 'relative',
+          borderCollapse: 'collapse',
+          scrollbarWidth: 'none'
         }}
       >
         <div style={{
@@ -166,15 +174,23 @@ export default function Dashboard() {
           </a>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed divide-y shadow-md rounded-lg overflow-hidden">
+        <div className="overflow-x-auto"
+          style={{
+            maxHeight: 'calc(100% - 64px)',
+            position: 'sticky',
+            backgroundColor: '#fff'
+          }}
+        >
+          <table className="min-w-full table-fixed divide-y shadow-md rounded-lg">
             <thead style={{
               backgroundColor: '#f0f0f0',
-              border: '1px solid #ddd',
               fontFamily: poppins.style.fontFamily,
+              position: 'sticky',
+              zIndex: 10,
+              top: 0,
             }}>
-              <tr className="text-center">
-                <th className="py-2 px-4 ">Material</th>
+              <tr className="text-center position-sticky top-0">
+                <th className="py-2 px-4">Material</th>
                 <th className="py-2 px-4">Código</th>
                 <th className="py-2 px-4">Espessura (mm)</th>
                 <th className="py-2 px-4">Comprimento (mm)</th>
