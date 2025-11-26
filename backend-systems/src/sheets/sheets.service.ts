@@ -42,11 +42,11 @@ export class SheetsService {
     });
   }
 
-  async findMany(material: string) {
+  async findMany(value: string) {
     return await this.prisma.sheet.findMany({
       where: {
         material: {
-          contains: material,
+          contains: value,
           mode: 'insensitive'
         }
       },
