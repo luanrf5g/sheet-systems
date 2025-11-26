@@ -62,7 +62,7 @@ export default function CreateSheet() {
     try {
       await api.post('/sheets', payload);
       alert('Chapa cadastrada com sucesso!');
-      router.push('/sheets'); // Volta para a lista
+      router.push('/'); // Volta para a lista
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Erro ao cadastrar chapa.';
       setError(Array.isArray(msg) ? msg.join(', ') : msg);
@@ -74,7 +74,7 @@ export default function CreateSheet() {
   return (
     <div className="container mx-auto p-8">
       <Link
-        href="/sheets"
+        href="/"
         className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 font-semibold"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

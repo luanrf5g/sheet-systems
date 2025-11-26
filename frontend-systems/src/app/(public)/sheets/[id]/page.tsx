@@ -113,7 +113,7 @@ export default function Detail() {
     try {
       await api.delete(`/sheets/${sheetId}`);
       alert('Chapa excluída com sucesso.');
-      router.push('/sheets');
+      router.push('/');
     } catch (e) {
       alert('Erro ao excluir chapa.');
     }
@@ -148,7 +148,7 @@ export default function Detail() {
   return (
     <div className="container mx-auto p-8">
       <Link
-        href="/sheets"
+        href="/"
         className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6 font-semibold"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
