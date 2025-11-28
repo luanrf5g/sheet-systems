@@ -9,7 +9,7 @@ const poppins = Poppins({
   subsets: ['latin'],
 })
 
-const SOCKET_URL = 'http://192.168.3.54:3333'
+const SOCKET_URL = 'http://192.168.3.213:3333'
 
 async function getSheets() {
   try {
