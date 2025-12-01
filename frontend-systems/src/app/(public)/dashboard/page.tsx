@@ -13,7 +13,7 @@ const SOCKET_URL = 'http://192.168.3.213:3333'
 
 async function getSheets() {
   try {
-    const response = await api.get<Sheet[]>('/sheets');
+    const response = await api.get('/');
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar chapas no backend:', error);
@@ -23,7 +23,7 @@ async function getSheets() {
 
 async function searchSheets(value: string) {
   try {
-    const response = await api.get<Sheet[]>(`/sheets/search/${value}`);
+    const response = await api.get(`/search/${value}`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar chapas no backend:', error);

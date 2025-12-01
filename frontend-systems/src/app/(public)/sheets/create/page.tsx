@@ -57,8 +57,6 @@ export default function CreateSheet() {
       location: formData.location || null, // Se vazio, envia null
     };
 
-    console.log(payload)
-
     try {
       await api.post('/sheets', payload);
       alert('Chapa cadastrada com sucesso!');
