@@ -43,7 +43,7 @@ export class SheetsService {
   }
 
   async findMany(value: string) {
-    return await this.prisma.sheet.findMany({
+    const plates = await this.prisma.sheet.findMany({
       where: {
         material: {
           contains: value,
@@ -54,6 +54,8 @@ export class SheetsService {
         createdAt: 'desc'
       }
     })
+
+    return plates;
   }
 
   async findOne(id: number) {

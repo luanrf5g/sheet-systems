@@ -13,6 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TubeType {
+  SQUARE
+  RECTANGLE
+  ROUND
+  L_SHAPED
+}
+
 model Sheet {
   id        Int      @id @default(autoincrement())
   code      String   @unique // Para o QR Code
@@ -30,6 +37,25 @@ model Sheet {
   @@map("sheets")
 }
 
+model Tube {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  type      TubeType
+  material  String
+  thickness Float
+  width     Float
+  height    Float
+  length    Float
+  weight    Float?
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tubeHistories TubeHistory[]
+
+  @@map("tubes")
+}
+
 model SheetHistory {
   id           Int      @id @default(autoincrement())
   sheetId      Int
@@ -40,4 +66,16 @@ model SheetHistory {
   updateDate   DateTime @default(now()) // Data da Alteração
 
   sheet Sheet @relation(fields: [sheetId], references: [id], onDelete: Cascade)
+}
+
+model TubeHistory {
+  id           Int      @id @default(autoincrement())
+  tubeId       Int
+  alteredField String
+  oldValue     String?
+  newValue     String?
+  user         String?
+  updateDate   DateTime @default(now())
+
+  tube Tube @relation(fields: [tubeId], references: [id], onDelete: Cascade)
 }
