@@ -1,6 +1,6 @@
 'use client'
 import { Poppins } from "next/font/google"
-import { api, Sheet } from "@/src/lib/api";
+import { api, Profile, Sheet } from "@/src/lib/api";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -9,9 +9,11 @@ const poppins = Poppins({
   subsets: ['latin'],
 })
 
+type DashboardList = Array<Sheet | Profile>
+
 const SOCKET_URL = 'http://192.168.3.213:3333'
 
-async function getSheets() {
+async function getList() {
   try {
     const response = await api.get('/');
     return response.data;
@@ -21,7 +23,7 @@ async function getSheets() {
   }
 }
 
-async function searchSheets(value: string) {
+async function searchAll(value: string) {
   try {
     const response = await api.get(`/search/${value}`);
     return response.data;
@@ -39,13 +41,13 @@ function codeAsShort(code: string) {
 }
 
 export default function Dashboard() {
-  const [sheets, setSheets] = useState<Sheet[]>([]);
+  const [list, setList] = useState<DashboardList>([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     async function fetchSheets() {
-      const response = await getSheets();
-      setSheets(response);
+      const response = await getList();
+      setList(response);
     }
     fetchSheets();
   }, [])
@@ -53,12 +55,12 @@ export default function Dashboard() {
   useEffect((): void => {
     async function reFetchSheets() {
       if(search.trim() === '') {
-        const response = await getSheets();
-        setSheets(response);
+        const response = await getList();
+        setList(response);
         return;
       }
-      const response = await searchSheets(search);
-      setSheets(response);
+      const response = await searchAll(search);
+      setList(response);
     }
     reFetchSheets();
   }, [search])
@@ -70,18 +72,18 @@ export default function Dashboard() {
       console.log('Conectado ao Servidor WebSocket!');
     })
 
-    socket.on('AddedPlate', (newSheet: Sheet) => {
-      console.log('Chapa adicionada via WebSocket: ', newSheet.code);
+    socket.on('AddedPlate', (newItem: Sheet) => {
+      console.log('Chapa adicionada via WebSocket: ', newItem.code);
 
-      setSheets(prevSheets => [newSheet, ...prevSheets])
+      setList(prevList => [...prevList, newItem])
     })
 
-    socket.on('UpdatedPlate', (updatedSheet: Sheet) => {
-      console.log('Chapa atualizada via WebSocket: ', updatedSheet.code)
+    socket.on('UpdatedPlate', (updatedItem: Sheet) => {
+      console.log('Chapa atualizada via WebSocket: ', updatedItem.code)
 
-      setSheets(prevSheets =>
-        prevSheets.map(
-          sheet => sheet.id === updatedSheet.id ? updatedSheet : sheet
+      setList(prevList =>
+        prevList.map(
+          item => item.id === updatedItem.id ? updatedItem : item
         )
       )
     })
@@ -200,19 +202,23 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {sheets.map((sheet: Sheet) => (
-                <tr key={sheet.id}
+              {list.map((item: Sheet | Profile) => (
+                <tr key={item.code}
                   className={"hover:bg-gray-100 transition duration-150 text-black text-center"}
                   style={{fontSize: 16, height: 64, borderBottom: '2px solid #ddd', width: 100}}
                 >
-                  <td className="py-2 px-4">{sheet.material}</td>
-                  <td className="py-2 px-4">{codeAsShort(sheet.code)}</td>
-                  <td className="py-2 px-4">{sheet.thickness}</td>
-                  <td className="py-2 px-4">{sheet.length}</td>
-                  <td className="py-2 px-4">{sheet.width}</td>
-                  <td className="py-2 px-4">{sheet.location || 'N/A'}</td>
+                  <td className="py-2 px-4">{item.material}</td>
+                  <td className="py-2 px-4">{codeAsShort(item.code)}</td>
+                  <td className="py-2 px-4">{item.thickness}</td>
+                  <td className="py-2 px-4">{item.length}</td>
+                  <td className="py-2 px-4">{item.width}</td>
+                  <td className="py-2 px-4">{item.location || 'N/A'}</td>
                   <td className="py-2 px-4">
-                    <a href={`/sheets/${sheet.id}`} className="text-blue-500 hover:text-blue-700">Ver Detalhes</a>
+                    <a href={
+                      item.code.startsWith('PR-') ?
+                        `/profiles/${item.id}` :
+                        `/sheets/${item.id}`
+                    } className="text-blue-500 hover:text-blue-700">Ver Detalhes</a>
                   </td>
                 </tr>
               ))}

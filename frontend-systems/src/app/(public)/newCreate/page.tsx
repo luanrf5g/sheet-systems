@@ -15,7 +15,7 @@ export default function SheetCreatePage() {
     location: '',
     // perfil specific
     height: '',
-    profileType: 'ROUND',
+    type: 'ROUND',
   })
 
   const [loading, setLoading] = useState(false)
@@ -46,23 +46,20 @@ export default function SheetCreatePage() {
       location: formData.location,
     }
 
+    let endpoint = '/sheets'
+
+    if (type === 'perfil') {
+      endpoint = '/profiles'
+      payload.height = cleanNumericInput(formData.height)
+      payload.type = formData.type
+    }
+
     try {
-      let endpoint = '/sheets'
-
-      if (type === 'perfil') {
-        endpoint = '/profiles'
-        payload.height = cleanNumericInput(formData.height)
-        payload.profileType = formData.profileType
-      }
-
-      console.log('Payload to submit:', payload)
-      console.log('Endpoint:', endpoint)
-
       await api.post(endpoint, payload)
 
       setSuccess('Registro criado com sucesso')
       // optionally clear form
-      setFormData({ material: '', thickness: '', length: '', width: '', location: '', height: '', profileType: 'Redondo' })
+      setFormData({ material: '', thickness: '', length: '', width: '', location: '', height: '', type: 'ROUND' })
     } catch (err: any) {
       setError(err?.message ?? 'Erro desconhecido')
     } finally {

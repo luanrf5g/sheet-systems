@@ -9,13 +9,13 @@ import { formatUUIDAsShort } from '@/src/utils/formatUUID';
 
 // Interface que inclui o Histórico (garanta que essa interface esteja no src/lib/api.ts)
 interface SheetWithHistory extends Sheet {
-    sheetHistories: {
-        id: number;
-        alteredField: string;
-        oldValue: string | null;
-        newValue: string | null;
-        updateDate: string;
-    }[];
+  sheetHistories: {
+    id: number;
+    alteredField: string;
+    oldValue: string | null;
+    newValue: string | null;
+    updateDate: string;
+  }[];
 }
 
 interface PageProps {

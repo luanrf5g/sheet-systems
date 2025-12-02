@@ -17,7 +17,21 @@ export interface Sheet {
   width: number;
   length: number;
   weight?: number;
-  stock: number;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Profile {
+  id: number;
+  code: string;
+  type: 'ROUND' | 'SQUARE' | 'RECTANGULAR';
+  material: string;
+  thickness: number;
+  width: number;
+  height: number;
+  length: number;
+  weight?: number;
   location: string;
   createdAt: string;
   updatedAt: string;
