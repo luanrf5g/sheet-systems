@@ -214,11 +214,7 @@ export default function Dashboard() {
                   <td className="py-2 px-4">{item.width}</td>
                   <td className="py-2 px-4">{item.location || 'N/A'}</td>
                   <td className="py-2 px-4">
-                    <a href={
-                      item.code.startsWith('PR-') ?
-                        `/profiles/${item.id}` :
-                        `/sheets/${item.id}`
-                    } className="text-blue-500 hover:text-blue-700">Ver Detalhes</a>
+                    <a href={`item/${item.code}`} className="text-blue-500 hover:text-blue-700">Ver Detalhes</a>
                   </td>
                 </tr>
               ))}

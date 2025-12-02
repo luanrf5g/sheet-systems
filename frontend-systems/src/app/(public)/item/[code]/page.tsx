@@ -20,7 +20,7 @@ interface SheetWithHistory extends Sheet {
 
 interface PageProps {
   params: {
-    id: string; // O ID virá como string da URL
+    code: string; // O ID virá como string da URL
   }
 }
 
@@ -28,13 +28,13 @@ export default function Detail() {
   const params = useParams() as PageProps["params"];
   const router = useRouter();
 
-  const sheetId = params.id;
+  const sheetCode = params.code;
   const [sheet, setSheet] = useState<SheetWithHistory | null>(null);
   const [loading, setLoading] = useState(true);
   const [updates, setUpdates] = useState<Partial<Sheet>>({}); // Rastreia APENAS as alterações
   const [isEditing, setIsEditing] = useState(false);
 
-  if(!sheetId) {
+  if(!sheetCode) {
     return <div className="container mx-auto p-8 text-center"><p>ID da chapa não fornecido.</p></div>;
   }
 
@@ -49,7 +49,7 @@ export default function Detail() {
     setLoading(true);
     try {
       // O backend já está configurado para retornar o histórico no findOne
-      const response = await api.get<SheetWithHistory>(`/sheets/${sheetId}`);
+      const response = await api.get<SheetWithHistory>(`/item/${sheetCode}`);
       setSheet(response.data);
       setUpdates({}); // Reseta updates ao carregar
     } catch (e) {
@@ -61,10 +61,10 @@ export default function Detail() {
   };
 
   useEffect(() => {
-    if (sheetId) {
+    if (sheetCode) {
       fetchSheet();
     }
-  }, [sheetId]);
+  }, [sheetCode]);
 
   // Handler para rastrear as mudanças APENAS nos campos editáveis
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +92,7 @@ export default function Detail() {
 
     setLoading(true);
     try {
-      await api.patch(`/sheets/${sheetId}`, updates);
+      await api.patch(`/sheets/${sheet?.id}`, updates);
       alert('Chapa atualizada com sucesso!');
       setIsEditing(false); // Sai do modo de edição
       fetchSheet(); // Recarrega os dados e o histórico
@@ -111,7 +111,7 @@ export default function Detail() {
     }
 
     try {
-      await api.delete(`/sheets/${sheetId}`);
+      await api.delete(`/sheets/${sheet?.id}`);
       alert('Chapa excluída com sucesso.');
       router.push('/dashboard');
     } catch (e) {
