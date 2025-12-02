@@ -24,6 +24,8 @@ export class ProfilesService {
   ) { }
 
   async create(createProfileDto: CreateProfileDto) {
+    console.log('Creating profile with data:', createProfileDto);
+
     const codeGenerated = `PR-${randomUUID()}`;
 
     const newProfile = await this.prisma.tube.create({
