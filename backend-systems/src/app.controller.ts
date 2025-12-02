@@ -14,4 +14,9 @@ export class AppController {
   findMany(@Param('material') material: string) {
     return this.appService.findMany(material);
   }
+
+  @Get('/item/:code')
+  findone(@Param('code') code: string) {
+    return this.appService.findOne(code);
+  }
 }

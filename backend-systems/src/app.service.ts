@@ -49,4 +49,18 @@ export class AppService {
 
     return mergeSortedArrays(plates, profiles);
   }
+
+  async findOne(code: string) {
+    const plate = await this.prisma.sheet.findUnique({
+      where: { code }
+    })
+
+    if (plate) return plate;
+
+    const profile = await this.prisma.tube.findUnique({
+      where: { code }
+    })
+
+    return profile;
+  }
 }
